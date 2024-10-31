@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
 
@@ -28,15 +29,24 @@ class LoginController extends GetxController {
     _sid.value = prefs.getString('room') ?? 'test room';
   }
 
-  bool handleJoin() {
+  bool handleJoin(){
     if (_server.value.length == 0 || _sid.value.length == 0) {
       return false;
     }
+
     prefs.setString('server', _server.value);
     prefs.setString('room', _sid.value);
     _meetingController.connect();
     Get.toNamed('/meeting');
     return true;
+
+  }
+
+  Future<bool> requestPermission()async{
+    var statusCamera = await Permission.camera.request();
+    var statusMic = await Permission.microphone.request();
+
+    return statusCamera.isGranted && statusMic.isGranted;
   }
 }
 
@@ -111,16 +121,28 @@ class LoginView extends GetView<LoginController> {
                     ),
                   ),
                 ),
-                onTap: () {
-                  if (!controller.handleJoin()) {
+                onTap: () async{
+                  if(await controller.requestPermission()){
+                    if (!controller.handleJoin()) {
+                      Get.dialog(AlertDialog(
+                        title: Text('Room/Server is empty'),
+                        content: Text('Please input room/server!'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('Ok'),
+                            onPressed: () => Get.back(),
+                          ),
+                        ],
+                      ));
+                    }
+                  }else{
                     Get.dialog(AlertDialog(
-                      title: Text('Room/Server is empty'),
-                      content: Text('Please input room/server!'),
-                      actions: <Widget>[
+                      title: Text("Permission Required"),
+                      content: Text("Camera and Microphone Permission are required to join the meeting"),
+                      actions: [
                         TextButton(
-                          child: Text('Ok'),
-                          onPressed: () => Get.back(),
-                        ),
+                            onPressed: () => Get.back(),
+                            child: Text("Ok"))
                       ],
                     ));
                   }
