@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
-import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:html' as html;
 
 import '../../utils/utils.dart';
@@ -45,7 +45,7 @@ class LoginController extends GetxController {
   }
 
   Future<bool> requestPermission()async{
-    if(Platform.isAndroid || Platform.isIOS){
+    if(!kIsWeb){
       var statusCamera = await Permission.camera.request();
       var statusMic = await Permission.microphone.request();
 
