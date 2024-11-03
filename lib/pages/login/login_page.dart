@@ -25,7 +25,7 @@ class LoginController extends GetxController {
   void onInit() async {
     super.onInit();
     prefs = await SharedPreferences.getInstance();
-    _server.value = prefs.getString('server') ?? '127.0.0.1';
+    _server.value = prefs.getString('server') ?? '68.183.230.61';
     _sid.value = prefs.getString('room') ?? 'test room';
   }
 
@@ -157,7 +157,7 @@ class LoginView extends GetView<LoginController> {
       return Scaffold(
           appBar: orientation == Orientation.portrait
               ? AppBar(
-                  title: Text('PION'),
+                  title: const Text('Genius Class'),
                 )
               : null,
           body: Stack(children: <Widget>[

@@ -109,7 +109,7 @@ class MeetingController extends GetxController {
     //if this client is hosted as a website, using https, the ion-backend has to be
     //reached via wss. So the address should be for example:
     //https://your-backend-address.com
-    var host = prefs.getString('server') ?? '127.0.0.1';
+    var host = prefs.getString('server') ?? '68.183.230.61';
     host = 'http://' + host + ':5551';
     //join room
     name.value = prefs.getString('display_name') ?? 'Guest';
@@ -745,7 +745,7 @@ class MeetingView extends GetView<MeetingController> {
                           margin: EdgeInsets.all(0.0),
                           child: Center(
                             child: Obx(() => Text(
-                                  'ION Conference [${controller.rid.value}]',
+                                  'Genius Conference [${controller.rid.value}]',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 18.0,
