@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
+import 'dart:io' show Platform;
+import 'dart:html' as html;
 
 import '../../utils/utils.dart';
 import '../meeting/meeting_page.dart';
@@ -43,10 +45,24 @@ class LoginController extends GetxController {
   }
 
   Future<bool> requestPermission()async{
-    var statusCamera = await Permission.camera.request();
-    var statusMic = await Permission.microphone.request();
+    if(Platform.isAndroid || Platform.isIOS){
+      var statusCamera = await Permission.camera.request();
+      var statusMic = await Permission.microphone.request();
 
-    return statusCamera.isGranted && statusMic.isGranted;
+      return statusCamera.isGranted && statusMic.isGranted;
+    }else{
+      // Web Permission Handling
+
+      try{
+        await html.window.navigator.mediaDevices!.getUserMedia({'video': true, 'audio': true});
+        return true;
+      }catch(e){
+        print("Error Permission ${e.toString()}");
+        return false;
+      }
+
+    }
+
   }
 }
 
